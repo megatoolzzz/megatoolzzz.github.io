@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>RC4 ENCODE / DECODE (STRING / HEX) | MEGATOOLZZZ</title>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+        body {
+            padding: 50px;
+        }
+        #data_string, #data_hex {
+            width: 680px;
+            height: 130px;
+            padding: 10px;
+            border: 3px solid #ccc;
+        }
+        #key_string, #key_hex {
+            width: 680px;
+            height: 45px;
+            padding: 0 10px;
+            border: 3px solid #ccc;
+        }
+        #button {
+            width: 705px;
+            height: 45px;
+            border: 3px solid green;
+            cursor: pointer;
+        }
+        #result {
+            width: 680px;
+            height: 130px;
+            padding: 10px;
+            border: 3px solid green;
+        }
+        #result_hex {
+            width: 680px;
+            height: 130px;
+            padding: 10px;
+            border: 3px solid green;
+        }
+        </style>
+        <script>
+        function rc4(key, str) {
+            var s = [], j = 0, x, res = '';
+            for (var i = 0; i < 256; i++) {
+                s[i] = i;
+            }
+            for (i = 0; i < 256; i++) {
+                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+                x = s[i];
+                s[i] = s[j];
+                s[j] = x;
+            }
+            i = 0;
+            j = 0;
+            for (var y = 0; y < str.length; y++) {
+                i = (i + 1) % 256;
+                j = (j + s[i]) % 256;
+                x = s[i];
+                s[i] = s[j];
+                s[j] = x;
+                res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+            }
+            return res;
+        }
+        function str2hex(str) {
+            var res = '';
+            for (var i = 0; i < str.length; i++) {
+                res += ('00' + str.charCodeAt(i).toString(16)).slice(-2);
+            }
+            return res;
+        }
+        function hex2str(hex) {
+            var res = '';
+            var hex_arr = hex.match(/.{1,2}/g) || [];
+            for (var i = 0; i < hex_arr.length; i++) {
+                res += String.fromCharCode(parseInt(hex_arr[i], 16));
+            }
+            return res;
+        }
+        function start() {
+            var data = (document.getElementById('data_string').value !== '') ? document.getElementById('data_string').value : hex2str(document.getElementById('data_hex').value);
+            var key = (document.getElementById('key_string').value !== '') ? document.getElementById('key_string').value : hex2str(document.getElementById('key_hex').value);
+            var decode = rc4(key, data);
+            document.getElementById('result').value = decode;
+            document.getElementById('result_hex').value = str2hex(decode);
+        }
+        </script>
+    </head>
+    <body>
+        <h1>RC4 ENCODE / DECODE (STRING / HEX)</h1>
+        <br>
+        DATA (STRING):<br>
+        <textarea id="data_string"></textarea><br>
+        <br>
+        <br>
+        DATA (HEX):<br>
+        <textarea id="data_hex"></textarea><br>
+        <br>
+        <br>
+        KEY (STRING):<br>
+        <input id="key_string" type="text"><br>
+        <br>
+        <br>
+        KEY (HEX):<br>
+        <input id="key_hex" type="text"><br>
+        <br>
+        <br>
+        <input id="button" type="submit" onclick="start()" value="ENCODE / DECODE"><br>
+        <br>
+        <br>
+        RESULT (STRING)<br>
+        <textarea id="result"></textarea><br>
+        <br>
+        <br>
+        RESULT (HEX)<br>
+        <textarea id="result_hex"></textarea>
+    </body>
+</html>

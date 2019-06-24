@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>HEX TO FILE | Hexadecimal code to file converter | MEGATOOLZZZ</title>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+        body {
+            padding: 50px;
+        }
+        #hex {
+            width: 680px;
+            height: 130px;
+            padding: 10px;
+            border: 3px solid #ccc;
+        }
+        #file_name {
+            width: 680px;
+            height: 45px;
+            padding: 0 10px;
+            border: 3px solid #ccc;
+        }
+        #button {
+            width: 705px;
+            height: 45px;
+            border: 3px solid green;
+            cursor: pointer;
+        }
+        #link {
+            color: green;
+        }
+        </style>
+        <script>
+        function hex2bin(hex) {
+            var res = '';
+            var hex_arr = hex.match(/.{1,2}/g) || [];
+            for (var i = 0; i < hex_arr.length; i++) {
+                res += String.fromCharCode(parseInt(hex_arr[i], 16));
+            }
+            return res;
+        }
+        function bin2file() {
+            var hex = document.getElementById('hex').value;
+            var file_name = document.getElementById('file_name').value;
+            var bin = hex2bin(hex);
+            var bin_base64 = btoa(bin);
+            document.getElementById('file').innerHTML = '<a id="link" download="' + file_name + '" href="data:application/octet-stream;base64,' + encodeURI(bin_base64) + '">DOWNLOAD <b>' + file_name + '</b></a>';
+        }
+        </script>
+    </head>
+    <body>
+        <h1>HEX TO FILE | Hexadecimal code to file converter</h1>
+        <br>
+        HEX:<br>
+        <textarea id="hex"></textarea><br>
+        <br>
+        <br>
+        FILE NAME:<br>
+        <input id="file_name" type="text" value="FILE.TMP"><br>
+        <br>
+        <br>
+        <input id="button" type="button" onclick="bin2file()" value="HEX TO FILE"><br>
+        <br>
+        <br>
+        <div id="file"></div>
+    </body>
+</html>
