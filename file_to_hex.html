@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>FILE TO HEX | File to hexadecimal code converter | MEGATOOLZZZ</title>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+        body {
+            padding: 50px;
+        }
+        #file {
+            width: 680px;
+            height: 30px;
+            padding: 10px;
+            border: 3px solid #ccc;
+        }
+        #hex {
+            width: 680px;
+            height: 130px;
+            padding: 10px;
+            border: 3px solid green;
+        }
+        </style>
+        <script>
+        var hD = '0123456789abcdef';
+        function dec2hex(d) {
+            var h = hD.substr(d & 15, 1);
+            while (d > 15) {
+                d >>= 4;
+                h = hD.substr(d & 15, 1) + h;
+            }
+            return h;
+        }
+        var uint8View;
+        function Convert() {
+            var hexText = '';
+            for (var i = 0; i < uint8View.length; i++) {
+                var charVal = uint8View[i];
+                hexText = hexText + (charVal < 16 ? '0' : '') + dec2hex(charVal);
+            }
+            document.getElementById('hex').value = hexText;
+        }
+        function readFileAsArray(file) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var arr = reader.result;
+                uint8View = new Uint8Array(arr);
+                Convert();
+            };
+            reader.readAsArrayBuffer(file);
+        } 
+        var openFile = function(event) {
+            var input = event.target;
+            readFileAsArray(input.files[0]);
+        };
+        </script>
+    </head>
+    <body>
+        <h1>FILE TO HEX | File to hexadecimal code converter</h1>
+        <br>
+        FILE:<br>
+        <input id="file" type="file" onchange="openFile(event);"><br>
+        <br>
+        <br>
+        HEX:<br>
+        <textarea id="hex"></textarea><br>
+    </body>
+</html>
